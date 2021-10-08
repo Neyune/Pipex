@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 19:19:09 by ereali            #+#    #+#             */
-/*   Updated: 2021/09/29 00:34:42 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/08 18:19:03 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ void args_error(void)
 	exit(EXIT_FAILURE);
 }
 
-int	check_arg(char *s)
-{
-	if (!s)
-		return (0);
-	return (1);
-}
+// int	check_arg(char *s)
+// {
+// 	if (!s)
+// 		return (0);
+// 	return (1);
+// }
 
 int	main(int argc, char** argv)
 {
+	int pipefd[2];
 	int in_pid;
 	int i;
 
@@ -36,11 +37,25 @@ int	main(int argc, char** argv)
 	in_pid = open(argv[1], O_RDONLY);
 	if (in_pid == -1)
 		args_error();
-	while (i <= 4)
+	if (pipe(pipefd) == -1)
 	{
-		if (!check_arg(argv[i]))
-			args_error();
-		i++;
+		perror("pipe");
+		exit(EXIT_FAILURE);
+    }
+	in_pid = fork();
+    if (in_pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+    }
+	if (in_pid == 0)
+	{
+		close(pipefd[0]);
+
+	}
+	else
+	{
+
 	}
 	return (0);
 }
