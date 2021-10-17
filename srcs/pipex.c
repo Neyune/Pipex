@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 19:19:09 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/17 06:25:31 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/18 00:16:15 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_printtab(char **tab)
 
 	while (tab[i])
 	{
-		printf("arguments : %s\n", tab[i]);
+		perror(tab[i]);
 		i++;
 	}
 }
@@ -58,7 +58,7 @@ char	*find_path(char **argv, char **envp)
 	(void)argv;
 
 	i = 0;
-	while (envp[i] && ft_strnstr(envp[i], "PATH", 4))
+	while (envp[i] && (!(ft_strnstr(envp[i], "PATH", 4))))
 		i++;
 	envp = ft_split(envp[i] + 5, ':');
 	i = 0;
@@ -77,7 +77,7 @@ char	*find_path(char **argv, char **envp)
 	return (NULL);
 }
 
-// printf sur sortie d'erreur 
+// printf sur sortie d'erreur
 void execute(const char *cmd, char **envp)
 {
 	char	**argv;
@@ -89,7 +89,9 @@ void execute(const char *cmd, char **envp)
 	if (argv == NULL)
 		return ;
 	if (access(cmd, X_OK) == -1)
+	{
 		pathname = find_path(argv, envp);
+	}
 	else
 	{
 		pathname = (char*)cmd;
@@ -113,7 +115,7 @@ void	first_cmd(int *pipefd, const char **argv, char **envp)
 	close(pipefd[0]);
 	dup2(first_pid, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
-	execute(argv[1], envp);
+	execute(argv[2], envp);
 }
 
 void	second_cmd(int *pipefd,const char **argv, char **envp)
@@ -123,7 +125,7 @@ void	second_cmd(int *pipefd,const char **argv, char **envp)
 	second_pid = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (second_pid < 0)
 		args_error();
-	close(pipefd[0]);
+	close(pipefd[1]);
 	dup2(second_pid, STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
 	execute(argv[3], envp);
@@ -152,9 +154,9 @@ int	main(int argc,const char **argv, char **envp)
 		use_perror("fork");
 	if (child2 == 0)
 		second_cmd(pipefd, argv, envp);
-	waitpid(child, &status, 0);
-	close(pipefd[1]);
 	waitpid(child2, &status, 0);
 	close(pipefd[0]);
+	waitpid(child, &status, 0);
+	close(pipefd[1]);
 	return (0);
 }
