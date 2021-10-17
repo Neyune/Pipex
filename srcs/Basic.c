@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 19:37:08 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/15 21:49:55 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/17 06:14:31 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,96 +26,77 @@ void	ft_putstr_fd(char *s, int fd)
 	}
 }
 
-static size_t	ft_count_word(char const *s, char c)
+size_t	ft_strlen(const char *s)
 {
-	size_t	i;
-	size_t	word;
+	int	i;
 
 	i = 0;
-	word = 0;
-	if (ft_strlen(s) == 0)
-		return (0);
-	while (s[i] == c)
-		i++;
 	while (s[i])
-	{
-		if (s[i] == c)
-		{
-			word++;
-			while (s[i] == c)
-				i++;
-			if (!(s[i]))
-				i--;
-		}
 		i++;
-	}
-	if (s[i - 1] == c)
-		return (word);
-	return (word + 1);
+	return (i);
 }
 
-static char	*ft_get_next_word(char const *s, char c, size_t *j)
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	char	*word;
-	size_t	jcopy;
-	size_t	i;
-
-	i = 0;
-	while (s[*j] == c)
-		(*j)++;
-	jcopy = *j;
-	while (s[jcopy] && s[jcopy] != c)
-		jcopy++;
-	word = (char *)malloc(sizeof(char) * (jcopy - *j + 1));
-	if (!(word))
-		return (NULL);
-	while (*j < jcopy)
-	{
-		word[i] = s[*j];
-		i++;
-		(*j)++;
-	}
-	word[i] = '\0';
-	return (word);
-}
-
-static void	ft_freetablib(char **tab, int i)
-{
-	while (i >= 0)
-	{
-		free(tab[i]);
-		i--;
-	}
-	free(tab);
-}
-
-char	**ft_split(char const *s, char c)
-{
-	char	**tab;
 	size_t	i;
 	size_t	j;
-	size_t	word;
 
 	i = 0;
 	j = 0;
-	if (!(s))
-		return (NULL);
-	word = ft_count_word(s, c);
-	if (word <= 1)
-		return(NULL);
-	tab = (char **)malloc(sizeof(char *) * (word + 1));
-	if (!(tab))
-		return (NULL);
-	while (i < word)
+	if (needle[0] == '\0')
+		return ((char *)haystack);
+	while (haystack[i] && i < len)
 	{
-		tab[i] = ft_get_next_word(s, c, &j);
-		if (!(tab[i]))
+		j = 0;
+		while ((i + j) < len && haystack[i + j] == needle[j])
 		{
-			ft_freetablib(tab, i);
-			return (NULL);
+			if (needle[j + 1] == '\0')
+				return ((char *)haystack + i);
+			j++;
 		}
 		i++;
 	}
-	tab[word] = NULL;
-	return (tab);
+	return (NULL);
+}
+
+static char	*ft_cpy(char const *s1, char const *s2)
+{
+	size_t	i;
+	size_t	j;
+	char	*result;
+
+	i = 0;
+	j = 0;
+	result = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 2);
+	if (!(result))
+		return (NULL);
+	while (s1[i])
+	{
+		result[i] = s1[i];
+		i++;
+	}
+	result[i] = '/';
+	i++;
+	while (s2[j])
+	{
+		result[i] = s2[j];
+		j++;
+		i++;
+	}
+	result[i] = '\0';
+	return (result);
+}
+
+char	*strjoinslash(char *s1, char const *s2)
+{
+	char	*result;
+
+	if ((!(s1)) && (!(s2)))
+		return (NULL);
+	if (!(s1))
+		return ((char *)s2);
+	if (!(s2))
+		return ((char *)s1);
+	result = ft_cpy(s1, s2);
+	return (result);
 }
