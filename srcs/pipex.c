@@ -115,6 +115,8 @@ void	first_cmd(int *pipefd, const char **argv, char **envp)
 	close(pipefd[0]);
 	dup2(first_pid, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
+	close(first_pid);
 	execute(argv[2], envp);
 }
 
@@ -128,6 +130,8 @@ void	second_cmd(int *pipefd,const char **argv, char **envp)
 	close(pipefd[1]);
 	dup2(second_pid, STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+	close(second_pid);
 	execute(argv[3], envp);
 }
 
@@ -154,9 +158,9 @@ int	main(int argc,const char **argv, char **envp)
 		use_perror("fork");
 	if (child2 == 0)
 		second_cmd(pipefd, argv, envp);
-	waitpid(child2, &status, 0);
 	close(pipefd[0]);
-	waitpid(child, &status, 0);
 	close(pipefd[1]);
+	waitpid(-1, &status, 0);
+	waitpid(-1, &status, 0);
 	return (0);
 }
