@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 03:04:39 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/18 03:10:01 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/18 03:20:48 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	args_error(void)
 {
-	ft_putstr_fd("Wrong args", 2);
+	ft_putstr_fd("Wrong args\n", 2);
 	exit(EXIT_FAILURE);
 }
 

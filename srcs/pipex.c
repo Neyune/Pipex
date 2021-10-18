@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 19:19:09 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/18 03:16:57 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/18 03:17:54 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	main(int argc, const char **argv, char **envp)
 		second_cmd(pipefd, argv, envp);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(NULL);
-	waitpid(NULL);
+	wait(NULL);
+	wait(NULL);
 	return (0);
 }

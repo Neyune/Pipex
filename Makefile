@@ -6,7 +6,7 @@
 #    By: ereali <ereali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/26 19:20:11 by ereali            #+#    #+#              #
-#    Updated: 2021/10/18 03:08:13 by ereali           ###   ########.fr        #
+#    Updated: 2021/10/18 03:22:07 by ereali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 
 ##Basics flags
 CFLAGS =	-Wall -Wextra -Werror
-#-g3 -fsanitize=address
+# -g3 -fsanitize=address
 
 ##Create the flags to includes every .h needed by this program
 IFLAGS =	$(foreach dir, $(INC_DIR), -I $(dir))
