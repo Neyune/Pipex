@@ -6,56 +6,16 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 19:19:09 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/18 00:16:15 by ereali           ###   ########.fr       */
+/*   Updated: 2021/10/18 03:16:57 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	args_error(void)
-{
-	ft_putstr_fd("Wrong args", 2);
-	exit(EXIT_FAILURE);
-}
-
-void ft_printtab(char **tab)
-{
-	int i = 0;
-
-	while (tab[i])
-	{
-		perror(tab[i]);
-		i++;
-	}
-}
-
-void	use_perror(char *str)
-{
-	perror(str);
-	exit(EXIT_FAILURE);
-}
-
-void freetab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	while (i >= 0)
-	{
-		free(tab[i]);
-		i--;
-	}
-	free(tab);
-}
-
 char	*find_path(char **argv, char **envp)
 {
 	char	*pathname;
-	int i;
-
-	(void)argv;
+	int		i;
 
 	i = 0;
 	while (envp[i] && (!(ft_strnstr(envp[i], "PATH", 4))))
@@ -77,24 +37,22 @@ char	*find_path(char **argv, char **envp)
 	return (NULL);
 }
 
-// printf sur sortie d'erreur
-void execute(const char *cmd, char **envp)
+void	execute(const char *cmd, char **envp)
 {
 	char	**argv;
 	char	*pathname;
 	int		ret;
-	int		ret2 = 0;
+	int		ret2;
 
+	ret2 = 0;
 	argv = ft_split(cmd, ' ');
 	if (argv == NULL)
 		return ;
 	if (access(cmd, X_OK) == -1)
-	{
 		pathname = find_path(argv, envp);
-	}
 	else
 	{
-		pathname = (char*)cmd;
+		pathname = (char *)cmd;
 		ret2 = 1;
 	}
 	ret = execve(pathname, argv, envp);
@@ -107,7 +65,7 @@ void execute(const char *cmd, char **envp)
 
 void	first_cmd(int *pipefd, const char **argv, char **envp)
 {
-	int first_pid;
+	int	first_pid;
 
 	first_pid = open(argv[1], O_RDONLY);
 	if (first_pid < 0)
@@ -120,9 +78,9 @@ void	first_cmd(int *pipefd, const char **argv, char **envp)
 	execute(argv[2], envp);
 }
 
-void	second_cmd(int *pipefd,const char **argv, char **envp)
+void	second_cmd(int *pipefd, const char **argv, char **envp)
 {
-	int second_pid;
+	int	second_pid;
 
 	second_pid = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (second_pid < 0)
@@ -135,13 +93,12 @@ void	second_cmd(int *pipefd,const char **argv, char **envp)
 	execute(argv[3], envp);
 }
 
-int	main(int argc,const char **argv, char **envp)
+int	main(int argc, const char **argv, char **envp)
 {
-	int pipefd[2];
-	int ret;
-	int status;
-	pid_t child;
-	pid_t child2;
+	int		pipefd[2];
+	int		ret;
+	pid_t	child;
+	pid_t	child2;
 
 	if (argc != 5)
 		args_error();
@@ -149,7 +106,7 @@ int	main(int argc,const char **argv, char **envp)
 	if (ret == -1)
 		use_perror("pipe");
 	child = fork();
-  if (child < 0)
+	if (child < 0)
 		use_perror("fork");
 	if (child == 0)
 		first_cmd(pipefd, argv, envp);
@@ -160,7 +117,7 @@ int	main(int argc,const char **argv, char **envp)
 		second_cmd(pipefd, argv, envp);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(-1, &status, 0);
-	waitpid(-1, &status, 0);
+	waitpid(NULL);
+	waitpid(NULL);
 	return (0);
 }

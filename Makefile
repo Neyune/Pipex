@@ -6,7 +6,7 @@
 #    By: ereali <ereali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/26 19:20:11 by ereali            #+#    #+#              #
-#    Updated: 2021/10/17 00:08:11 by ereali           ###   ########.fr        #
+#    Updated: 2021/10/18 03:08:13 by ereali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ OBJ_DIR	= obj
 vpath %.c $(foreach dir, $(SRC_DIR), $(dir):)
 
 ##List every .c found inside SRC_DIR
-SRC = pipex.c Basic.c ft_split.c
+SRC = pipex.c Basic.c ft_split.c Errorandfree.c
 
 ##Transform and place every .o from SRC
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
